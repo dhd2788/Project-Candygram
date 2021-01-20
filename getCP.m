@@ -20,4 +20,9 @@ function cp = getCP(image)
     % convert to string
     cp = strjoin(string(cp),'');
     
+    % if it's over 9000, it interpreted the P in CP as a 9
+    if cp > 9000
+        cp = cp - 9000;
+    end
+    
 end
