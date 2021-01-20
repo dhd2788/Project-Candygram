@@ -1,5 +1,3 @@
-candygram;
-
 function [] = candygram()
 
     username = "Kiwi#1000";
@@ -20,7 +18,7 @@ function [] = candygram()
     for i = 1:2:length(imageFiles)
         
         % image containing specie, CP, and IV information
-        ivOutput = imread("images/" + imageFiles(i).name);
+        appraisal = imread("images/" + imageFiles(i).name);
         
         % image containing the candy output. should always be immediately
         % after the specie info image, so its index is always i+1
@@ -30,11 +28,17 @@ function [] = candygram()
         dateVal = imageFiles(i).name(12:19); % trim the parts of the string that aren't relevant
         date = datetime(dateVal, 'InputFormat', 'yyyyMMdd', 'Format', 'yyyy-MM-dd');
         
+        % start with CP
+        cp = getCP(appraisal);
+        
+        % get specie name
+        specie = getSpecieName(appraisal);
+        
         % start by grabbing the IV's
-        [atk def sta] = determineIVs(ivOutput);
+        [atk def sta] = determineIVs(appraisal);
         
         % now grab the amount of candy obtained by checking the next image
-        candy = determineCandy(imread("images/" + imageFiles(i+1).name))
+        candy = determineCandy(imread("images/" + imageFiles(i+1).name));
         
         m(floor(i/2)+1,:) = [username string(date) specie string(cp) string(atk) string(def) string(sta) string(candy)];
     end

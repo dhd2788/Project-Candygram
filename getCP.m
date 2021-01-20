@@ -1,6 +1,4 @@
 function cp = getCP(image)
-    % initialize to -1 for error checking
-    cp = -1;
     
     % define a region of interest for where to check for CP
     roi = [356 208 647-356 311-208];
@@ -21,8 +19,8 @@ function cp = getCP(image)
     cp = strjoin(string(cp),'');
     
     % if it's over 9000, it interpreted the P in CP as a 9
-    if cp > 9000
-        cp = cp - 9000;
+    if double(cp) > 9000
+        cp = string(double(cp) - 9000);
     end
     
 end

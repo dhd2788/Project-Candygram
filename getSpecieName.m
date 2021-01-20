@@ -27,4 +27,8 @@ function specie = getSpecieName(image)
         specie = 'Baltoy';
     end
     
+    if string(specie) == "Starly"
+        specie = "Starly";
+    end
+    
 end
