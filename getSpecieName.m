@@ -20,6 +20,11 @@ function specie = getSpecieName(image)
     % now capitalize the first character using regex
     specie = convertStringsToChars(specie);
     idx=regexp([' ' specie],'(?<=\s+)\S','start')-1;
-    specie(idx)=upper(specie(idx))
+    specie(idx)=upper(specie(idx));
+    
+    % exception case for baltoy : often gets interpreted as "Bakoy"
+    if string(specie) == "Bakoy"
+        specie = 'Baltoy';
+    end
     
 end
