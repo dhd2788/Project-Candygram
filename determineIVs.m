@@ -18,15 +18,15 @@ function [atk def sta] = determineIVs(image)
     % determine the 0-15 value of the IV
     for i = 1:3
         % start by checking the exceptions (0 and 15)
-        if similarColors(image(rows(i), columns(1), :), color0) == 1
+        if similarColors(squeeze(image(rows(i), columns(1), :)), color0) == 1
             results(i) = 0;
-        elseif similarColors(image(rows(i), columns(3), :), color15) == 1
+        elseif similarColors(squeeze(image(rows(i), columns(3), :)), color15) == 1
             results(i) = 15;
         
         % if neither of those work, read from the right side
         else
             for j = 14:-1:1
-                if similarColors(image(rows(i), columns(j), :), color1to14) == 1
+                if similarColors(squeeze(image(rows(i), columns(j), :)), color1to14) == 1
                     results(i) = j;
                     break;
                 end
