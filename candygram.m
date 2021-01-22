@@ -1,15 +1,16 @@
 function [] = candygram()
 
+    % TODO read in configuration file
+    
     username = "Kiwi#1000";
-    date = "Screenshot_20210117-194540_Pokmon_GO.jpg";
-    specie = "null";
-    cp = 0;
-    atk = -1;
-    def = -1;
-    sta = -1;
-    candy = -1;
     
     imageFiles = dir("images/*.jpg");
+    
+    % grab data for stat validation
+    validation_data = load('validation_data.mat');
+    specieNames = validation_data.names;
+    baseStats = validation_data.stats;
+    cpModifier = validation_data.cp;
     
     % only interested in the number of images (x)
     [x y] = size(imageFiles);
@@ -29,18 +30,32 @@ function [] = candygram()
         date = datetime(dateVal, 'InputFormat', 'yyyyMMdd', 'Format', 'yyyy-MM-dd');
         
         % start with CP
-        cp = getCP(appraisal);
+        cp = getCP(appraisal, 0);
         
         % get specie name
         specie = getSpecieName(appraisal);
         
-        % start by grabbing the IV's
+        % grab the IV's
         [atk def sta] = determineIVs(appraisal);
+                
+        % if invalid, the CP was probably read wrong, so we want to black
+        % out the pixels around the text and try again
+        if validateStats(specie, cp, [atk def sta], specieNames, baseStats, cpModifier) == 0
+            cp = getCP(appraisal, 1);
+        end
+        
+        % check if valid again. if still invalid, note it as such in the
+        % results
+        if validateStats(specie, cp, [atk def sta], specieNames, baseStats, cpModifier) == 0
+            cp = "FAILED TO READ CP";
+        end
         
         % now grab the amount of candy obtained by checking the next image
         candy = determineCandy(imread("images/" + imageFiles(i+1).name));
         
         m(floor(i/2)+1,:) = [username string(date) specie string(cp) string(atk) string(def) string(sta) string(candy)];
     end
+    
+    % TODO: export as spreadsheet
     
 end
